@@ -769,7 +769,7 @@ def miniMax(game_state, depth, curr_snake_id, main_snake_id, previous_snake_id, 
 def miniMax_value(game_state, safe_moves):
     current_game_state = createGameState(game_state, game_state["you"]["id"])
 
-    depth = 5
+    depth = 6
 
     result_value, best_move = miniMax(current_game_state, depth, game_state["you"]["id"], game_state["you"]["id"], None, True, float("-inf"), float("inf"))
     # print(f"Minimax value: {result_value}, Best move: {best_move}")
