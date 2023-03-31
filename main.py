@@ -717,13 +717,7 @@ def miniMax(game_state, depth, curr_snake_id, main_snake_id, previous_snake_id, 
           return float('inf')
   
     if (depth == 0):
-      if (previous_snake_id and previous_snake_id == main_snake_id):
-        return evaluatePoint(game_state, depth, curr_snake_id, previous_snake_id)     
-      elif (previous_snake_id and previous_snake_id != main_snake_id):
-        return -1 * evaluatePoint(game_state, depth, curr_snake_id, previous_snake_id) 
-      # return evaluatePoint(game_state, depth, curr_snake_id, previous_snake_id) 
-      
-
+      return evaluatePoint(game_state, depth, main_snake_id, previous_snake_id)
 
     # get the id of the next snake that we're gonna minimax
     curr_index = 0
@@ -734,7 +728,6 @@ def miniMax(game_state, depth, curr_snake_id, main_snake_id, previous_snake_id, 
 
     # Select the next snake id inside the snake array
     next_snake_id = game_state["snakes"][(curr_index + 1) % len(game_state["snakes"])]["id"]
-    previous_snake_id = curr_snake_id
 
     moves = ["up", "down", "right", "left"]
 
@@ -744,8 +737,8 @@ def miniMax(game_state, depth, curr_snake_id, main_snake_id, previous_snake_id, 
         for move in moves:
             # Makes a copy of the current game state with the current snake taking a possible move
             new_game_state = makeMove(game_state, curr_snake_id, move)
-            curr_val = miniMax(new_game_state, depth - 1, next_snake_id, main_snake_id, previous_snake_id, False, alpha, beta)
-            print(f"{curr_snake_id} {move}: {curr_val}")
+            curr_val = miniMax(new_game_state, depth - 1, next_snake_id, main_snake_id, curr_snake_id, False, alpha, beta)
+            # print(f"{curr_snake_id} {move}: {curr_val}")
             if (curr_val > highest_value):
                 best_move = move
                 highest_value = curr_val
@@ -755,7 +748,7 @@ def miniMax(game_state, depth, curr_snake_id, main_snake_id, previous_snake_id, 
             if (alpha >= beta):
                 break
 
-        print(f"highest :   {curr_snake_id} {best_move}: {highest_value}")
+        # print(f"highest :   {curr_snake_id} {best_move}: {highest_value}")
         
         return (highest_value, best_move) if return_move else highest_value
     
@@ -764,7 +757,7 @@ def miniMax(game_state, depth, curr_snake_id, main_snake_id, previous_snake_id, 
         best_move = None
         for move in moves:
             new_game_state = makeMove(game_state, curr_snake_id, move)
-            curr_val = miniMax(new_game_state, depth - 1, next_snake_id, main_snake_id, previous_snake_id, False, alpha, beta)
+            curr_val = miniMax(new_game_state, depth - 1, next_snake_id, main_snake_id, curr_snake_id, False, alpha, beta)
             # print(f"{curr_snake_id} {move}: {curr_val}")
             if (min_value > curr_val):
                 best_move = move
