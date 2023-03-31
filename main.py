@@ -616,15 +616,15 @@ def evaluatePoint(game_state, depth, curr_snake_id, previous_snake_id):
     if (curr_snake_head is None): return float("-inf")
 
      # Weights
-    food_weight = 1000
-    size_difference_weight = 10
-    available_space_weight = 0.2
+    food_weight = 75
+    size_difference_weight = 1000
+    available_space_weight = 100
     outer_bound_weight = 0
-    edge_kill_weight = 0
-    head_losing_weight = 0
-    center_control_weight = 0
-    head_kill_weight = 0
-    turn_weight = 0.08
+    edge_kill_weight = 60
+    head_losing_weight = -10
+    center_control_weight = 10
+    head_kill_weight = 50
+    turn_weight = 100
       
     available_space = floodFill(game_state, curr_snake_head)
 
@@ -783,7 +783,7 @@ def miniMax(game_state, depth, curr_snake_id, main_snake_id, previous_snake_id, 
 def miniMax_value(game_state, safe_moves):
     current_game_state = createGameState(game_state, game_state["you"]["id"])
 
-    depth = 1
+    depth = 5
 
     result_value, best_move = miniMax(current_game_state, depth, game_state["you"]["id"], game_state["you"]["id"], None, True, float("-inf"), float("inf"))
     # print(f"Minimax value: {result_value}, Best move: {best_move}")
