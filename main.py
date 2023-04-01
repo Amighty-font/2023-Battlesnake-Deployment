@@ -82,13 +82,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
             safe_moves[f"{move}"] = isSafe
             available_moves.append(move)
 
-    print(safe_moves)
     if len(safe_moves) == 0:
         board_copy = createBoardState(game_state)
         print(f"MOVE {game_state['turn']}: No safe moves detected! Moving down")
-        for row in board_copy["state_board"]:
-          format_row = " ".join(str(el).rjust(2, ' ') for el in row)
-          print(format_row)
         return {"move": "down"}
 
     # TODO: Step 4 - Move towards food instead of random, to regain health and survive longer
@@ -98,6 +94,8 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
     best_value = max([value for _, value in safe_moves.items()])
     best_move = [move for move, value in safe_moves.items() if value == best_value]
+
+    print(game_state)
 
     # Choose a random move from the best ones
     next_move = random.choice(best_move)
