@@ -694,7 +694,9 @@ def evaluatePoint(game_state, depth, curr_snake_id, previous_snake_id):
           head_losing_weight -= 10
         
         
-    return curr_snake_health/2 + (available_space * available_space_weight) + (size_difference * size_difference_weight) + outer_bound_weight + edge_kill_weight + head_losing_weight + center_control_weight + food_weight / (closest_food + 1) + head_kill_weight /(closest_smallest_snake + 1) + curr_snake_size * 7
+    return curr_snake_health/2 + (available_space * available_space_weight) + (size_difference * size_difference_weight) 
+    + outer_bound_weight + edge_kill_weight + head_losing_weight + center_control_weight + food_weight / (closest_food + 1) 
+    + head_kill_weight /(closest_smallest_snake + 1) + curr_snake_size * 7
 
 
 # The snake MiniMax algorithm
