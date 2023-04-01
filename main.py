@@ -82,12 +82,12 @@ def move(game_state: typing.Dict) -> typing.Dict:
             safe_moves[f"{move}"] = isSafe
             available_moves.append(move)
 
-    print(safe_moves);
+    print(safe_moves)
     if len(safe_moves) == 0:
-        board_copy = createBoardState(game_state);
+        board_copy = createBoardState(game_state)
         print(f"MOVE {game_state['turn']}: No safe moves detected! Moving down")
         for row in board_copy["state_board"]:
-          format_row = " ".join(str(el).rjust(2, ' ') for el in row);
+          format_row = " ".join(str(el).rjust(2, ' ') for el in row)
           print(format_row)
         return {"move": "down"}
 
@@ -118,7 +118,7 @@ def preventBack(game_state, is_move_safe):
     my_neck = game_state["you"]["body"][1]  # Coordinates of your "neck"
   
     if my_neck["x"] < my_head["x"]:  # Neck is left of head, don't move left
-        is_move_safe["left"] += MIN_MOVE_VALUE;
+        is_move_safe["left"] += MIN_MOVE_VALUE
   
     elif my_neck["x"] > my_head["x"]:  # Neck is right of head, don't move right
         is_move_safe["right"] += MIN_MOVE_VALUE
@@ -137,7 +137,7 @@ def outOfBounds(game_state, is_move_safe):
      board_height = game_state["board"]["height"]
   
      if my_head["x"] >= board_width - 1:
-       is_move_safe["right"] += MIN_MOVE_VALUE;
+       is_move_safe["right"] += MIN_MOVE_VALUE
      if my_head["x"] <= 0:
        is_move_safe["left"] += MIN_MOVE_VALUE
      if my_head["y"] >= board_height - 1:
@@ -149,72 +149,72 @@ def outOfBounds(game_state, is_move_safe):
 def selfCollision(game_state, is_move_safe):
     my_body = game_state["you"]["body"]
     my_head = game_state["you"]["body"][0]
-    head_x = my_head["x"];
-    head_y = my_head["y"];
+    head_x = my_head["x"]
+    head_y = my_head["y"]
 
     for i in range(len(my_body)):
-      currBody = my_body[i];
-      currX = currBody["x"];
-      currY = currBody["y"];
+      currBody = my_body[i]
+      currX = currBody["x"]
+      currY = currBody["y"]
       
       if (head_x + 1 == currX and head_y == currY):              
-        is_move_safe["right"] += MIN_MOVE_VALUE;
+        is_move_safe["right"] += MIN_MOVE_VALUE
       elif (head_x - 1 == currX and head_y == currY):
-        is_move_safe["left"] += MIN_MOVE_VALUE;
+        is_move_safe["left"] += MIN_MOVE_VALUE
       elif (head_x == currX and head_y + 1 == currY):
-        is_move_safe["up"] += MIN_MOVE_VALUE;
+        is_move_safe["up"] += MIN_MOVE_VALUE
       elif (head_x == currX and head_y - 1 == currY):
-        is_move_safe["down"] += MIN_MOVE_VALUE;
+        is_move_safe["down"] += MIN_MOVE_VALUE
 
 
 # Prevent snake from colliding to opponent body, control head collision
 def collision(game_state, is_move_safe):
-    my_id = game_state["you"]["id"];
-    my_head = game_state["you"]["head"];
-    head_x = my_head["x"];
-    head_y = my_head["y"];
-    my_size = game_state["you"]["length"];
-    opponents = game_state["board"]["snakes"];
+    my_id = game_state["you"]["id"]
+    my_head = game_state["you"]["head"]
+    head_x = my_head["x"]
+    head_y = my_head["y"]
+    my_size = game_state["you"]["length"]
+    opponents = game_state["board"]["snakes"]
     for snake in opponents:
-      opponent_id = snake["id"];
+      opponent_id = snake["id"]
       opponent_head = snake["head"]
-      opponent_size = snake["length"];
+      opponent_size = snake["length"]
 
       # Skip if snake is our snake
       if (opponent_id == my_id): continue
           
-      for currSnake_body in snake["body"]:
-        currSnake_X = currSnake_body["x"];
-        currSnake_Y = currSnake_body["y"];
+      for currSnake_body in snake["body"]
+        currSnake_X = currSnake_body["x"]
+        currSnake_Y = currSnake_body["y"]
         
         # Check Head, Add headkill value if snake can win head collision
         if (currSnake_body == opponent_head and my_size > opponent_size):
           if (head_x + 1 == currSnake_X and head_y ==  currSnake_Y):
-            is_move_safe["right"] += HEAD_KILL_VALUE;
+            is_move_safe["right"] += HEAD_KILL_VALUE
           elif (head_x - 1 == currSnake_X and head_y ==  currSnake_Y):
-            is_move_safe["left"] = HEAD_KILL_VALUE;
+            is_move_safe["left"] = HEAD_KILL_VALUE
           elif (head_x == currSnake_X and head_y + 1 ==  currSnake_Y):
-            is_move_safe["up"] = HEAD_KILL_VALUE;
+            is_move_safe["up"] = HEAD_KILL_VALUE
           elif (head_x == currSnake_X and head_y - 1 ==  currSnake_Y):
-            is_move_safe["down"] = HEAD_KILL_VALUE;
+            is_move_safe["down"] = HEAD_KILL_VALUE
           
         else:
           if (head_x + 1 == currSnake_X and head_y == currSnake_Y):
-            is_move_safe["right"] += MIN_MOVE_VALUE;
+            is_move_safe["right"] += MIN_MOVE_VALUE
           elif (head_x - 1 == currSnake_X and head_y == currSnake_Y):
-            is_move_safe["left"] += MIN_MOVE_VALUE;
+            is_move_safe["left"] += MIN_MOVE_VALUE
           elif (head_x == currSnake_X and head_y + 1 == currSnake_Y):
-            is_move_safe["up"] += MIN_MOVE_VALUE;
+            is_move_safe["up"] += MIN_MOVE_VALUE
           elif (head_x == currSnake_X and head_y - 1 == currSnake_Y):
-            is_move_safe["down"] += MIN_MOVE_VALUE;   
+            is_move_safe["down"] += MIN_MOVE_VALUE  
 
 
 def findFood(game_state, safe_moves):
     foods = game_state["board"]["food"]
     health = game_state["you"]["health"]
     my_head = game_state["you"]["body"][0]
-    head_x = my_head["x"];
-    head_y = my_head["y"];
+    head_x = my_head["x"]
+    head_y = my_head["y"]
     closest_dist = float('inf')
     closest = {}
 
@@ -224,8 +224,8 @@ def findFood(game_state, safe_moves):
     for food in foods:
       curr_dist = calculateDist(my_head, food)
       if (curr_dist < closest_dist):
-        closest = food;
-        closest_dist = curr_dist;
+        closest = food
+        closest_dist = curr_dist
 
     if (head_x < closest["x"] and "right" in safe_moves):
       #go right
