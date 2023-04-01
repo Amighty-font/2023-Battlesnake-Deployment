@@ -181,7 +181,7 @@ def collision(game_state, is_move_safe):
       # Skip if snake is our snake
       if (opponent_id == my_id): continue
           
-      for currSnake_body in snake["body"]
+      for currSnake_body in snake["body"]:
         currSnake_X = currSnake_body["x"]
         currSnake_Y = currSnake_body["y"]
         
