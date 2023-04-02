@@ -746,7 +746,7 @@ def headCollisionInfo(game_state, head_x, head_y, curr_snake_size, curr_snake_id
     other_head_losing_weight = -100
     main_head_losing_weight = 1000
 
-    other_head_equal_weight = -50
+    other_head_equal_weight = -90
 
     for snake in game_state["snakes"]:
         curr_head_losing_weight = 0
