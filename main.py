@@ -743,10 +743,10 @@ def edgeKillValue(board_width, board_height, head_x, head_y, other_edge_snakes, 
 # Finds the closest smallest snake distance as well as returning head collision values
 def headCollisionInfo(game_state, head_x, head_y, curr_snake_size, curr_snake_id, main_snake_id):
     smallest_snake_distance = float("inf")
-    other_head_losing_weight = -1200
-    main_head_losing_weight = 3000
+    other_head_losing_weight = -100
+    main_head_losing_weight = 1000
 
-    other_head_equal_weight = -600
+    other_head_equal_weight = -50
 
     for snake in game_state["snakes"]:
         curr_head_losing_weight = 0
