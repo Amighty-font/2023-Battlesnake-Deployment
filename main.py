@@ -547,6 +547,9 @@ def makeMove(game_state, curr_snake_id, move):
                 removeKilledSnake(new_board_state, new_head_state,
                                   new_snake_state, curr_snake_index)
 
+                # Index might have changed when snake is removed
+                destination_snake_index, _, _, _ = findCurrentSnake(new_snake_state, destination_snake_index)
+                
                 # Same size case
                 if (destination_snake_length == curr_snake_length):
                     removeKilledSnake(
