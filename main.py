@@ -794,6 +794,8 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
     head_kill_weight = 50
     turn_weight = 100
 
+    depth_discount_factor = 0.4
+
     # If the game state given somehow does not exist
     if (game_state is None):
         if (curr_snake_id == main_snake_id):
@@ -858,6 +860,8 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
     
     curr_weight += head_collision_value
     curr_weight += head_kill_weight / (smallest_snake_distance + 1)
+
+    curr_weight *= depth_discount_factor * depth
 
     if (curr_snake_id == main_snake_id):
         return curr_weight
