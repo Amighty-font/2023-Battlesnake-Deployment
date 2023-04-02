@@ -789,7 +789,7 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
     small_size_penalty_weight = -400
     available_space_weight = 0.7
     snake_size_weight = 7
-    outer_bound_weight = -18
+    outer_bound_weight = -30
     center_control_weight = 12
     head_kill_weight = 50
     turn_weight = 100
