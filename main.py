@@ -831,6 +831,9 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
     center_control_weight = 10
     head_kill_weight = 50
     turn_weight = 100
+    snake_size_weight = 15
+    food_weight = 20
+
 
     depth_discount_factor = 0.4
 
@@ -857,12 +860,17 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
     # Find current snake as well as average snake size and snakes that are on the edge
     curr_snake_head, curr_snake_size, curr_snake_health, average_snake_size, other_edge_snakes = snakeInfoLoop(
         game_state, curr_snake_id, board_width, board_height)
+
+    if (curr_snake_size > 25):
+        snake_size_weight = 7
+        food_weight = 12
+        available_space_weight = 0.5
+
+
       
     # # Add weight if current snake is smaller than average size of snakes
     # if (curr_snake_size < average_snake_size):
     #     curr_weight += small_size_penalty_weight
-
-    snake_size_weight = 15
   
     # Add weight the bigger the snake is, currently + 15 for each growth
     curr_weight += curr_snake_size * snake_size_weight
@@ -879,7 +887,6 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
     head_y = curr_snake_head["y"]
 
   
-    food_weight = 20
     # Closest distance to food, add weight scaling depending on how close is curr snake to food
     closest_food_distance = closestFoodDistance(
         board_state, board_width, board_height, head_x, head_y)
