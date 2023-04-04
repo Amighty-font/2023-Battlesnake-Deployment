@@ -960,6 +960,8 @@ def miniMax(game_state, depth, curr_snake_id, main_snake_id, previous_snake_id, 
 def miniMax_value(game_state, safe_moves):
     current_game_state = createGameState(game_state, game_state["you"]["id"])
 
+    snakes_num = len(game_state["board"]["snakes"])
+
     if (snakes_num == 4):
       depth = 5
     elif (snakes_num == 3):
