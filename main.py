@@ -65,10 +65,12 @@ def move(game_state: typing.Dict) -> typing.Dict:
         if isSafe >= DEFAULT_MOVE_VALUE:
             safe_moves[f"{move}"] = isSafe
             available_moves.append(move)
+          
+    selected_move = miniMax_value(game_state, safe_moves)
 
-    # print(game_state)
+    print(game_state)
     # print(safe_moves)
-    if len(safe_moves) == 0:
+    if (len(safe_moves) == 0 and selected_move is None):
         board_copy = createBoardState(game_state)
         print(
             f"MOVE {game_state['turn']}: No safe moves detected! Moving down")
@@ -80,20 +82,22 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # TODO: Step 4 - Move towards food instead of random, to regain health and survive longer
     # findFood(game_state, safe_moves)
 
-    selected_move = miniMax_value(game_state, safe_moves)
-
-    best_value = max([value for _, value in safe_moves.items()])
-    best_move = [move for move, value in safe_moves.items()
-                 if value == best_value]
+    # best_value = max([value for _, value in safe_moves.items()])
+    # best_move = [move for move, value in safe_moves.items()
+    #              if value == best_value]
 
     # Choose a random move from the best ones
+    best_move = [move for move, value in safe_moves.items()]
+                 
     if (selected_move is None):
-      next_move = random.choice(best_move)
+      if (len(safe_moves) > 0):
+        next_move = random.choice(best_move)
     else:
       next_move = selected_move
     print(
         f"MOVE {game_state['turn']}: {next_move}, SNAKE HEALTH: {game_state['you']['health']}")
     return {"move": next_move}
+
 
 # ----------------------------------------------------------------------------
 # SNAKE BASIC BEHAVIOR
@@ -956,7 +960,14 @@ def miniMax(game_state, depth, curr_snake_id, main_snake_id, previous_snake_id, 
 def miniMax_value(game_state, safe_moves):
     current_game_state = createGameState(game_state, game_state["you"]["id"])
 
-    depth = 7
+    if (snakes_num == 4):
+      depth = 5
+    elif (snakes_num == 3):
+      depth = 7
+    elif (snakes_num == 2):
+      depth = 7
+    else:
+      depth = 7
 
     result_value, best_move = miniMax(
         current_game_state, depth, game_state["you"]["id"], game_state["you"]["id"], None, True, float("-inf"), float("inf"))
