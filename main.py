@@ -866,7 +866,7 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
         food_weight = 12
         available_space_weight = 0.5
 
-    if (len(game_state["snakes"] > 2)):
+    if (len(game_state["snakes"]) > 2):
         center_control_weight = 6
 
     if (len(game_state["snakes"]) > 3):
