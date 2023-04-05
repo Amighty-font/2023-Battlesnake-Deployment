@@ -859,7 +859,7 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
 
     opponent_death_weight = float("inf")
     available_space_weight = 0.5
-    outer_bound_weight = -13
+    outer_bound_weight = -15
     center_control_weight = 10
     head_kill_weight = 50
     food_weight = 20
