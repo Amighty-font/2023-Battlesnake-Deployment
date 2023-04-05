@@ -1016,9 +1016,9 @@ def miniMax_value(game_state, safe_moves):
     if (snakes_num == 4):
         depth = 5
     elif (snakes_num == 3):
-        depth = 7
+        depth = 4
     elif (snakes_num == 2):
-        depth = 7
+        depth = 5
     else:
         depth = 7
 
