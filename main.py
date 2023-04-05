@@ -1051,3 +1051,5 @@ if __name__ == "__main__":
 
 # TODO:
 # Prevent the snake going in between snakes
+# Snake go into circle if surrounded by bigger snakes
+# snake does not go to spaces that it cannot come out of
