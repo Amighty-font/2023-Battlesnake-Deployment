@@ -898,7 +898,7 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
         food_weight = 15
 
     if (len(game_state["snakes"]) == 2):
-        head_kill_weight += 15
+        head_kill_weight += 25
       
     # # Add weight if current snake is smaller than average size of snakes
     # if (curr_snake_size < average_snake_size):
@@ -1054,3 +1054,4 @@ if __name__ == "__main__":
 # Snake go into circle if surrounded by bigger snakes
 # snake does not go to spaces that it cannot come out of
 # Weak against snakes that come down from center and edge choke our snake
+# Edge kill from more than just border
