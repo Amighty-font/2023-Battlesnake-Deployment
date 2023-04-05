@@ -894,11 +894,12 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
         head_kill_weight = 30
         food_weight = 25
 
-    if (curr_snake_size >= 25):
-        size_weight = 15
-
     if (len(game_state["snakes"]) == 2):
-        head_kill_weight += 25
+        outer_bound_weight = -13
+
+    if (curr_snake_size >= 25):
+        snake_size_weight = 10
+
       
     # # Add weight if current snake is smaller than average size of snakes
     # if (curr_snake_size < average_snake_size):
@@ -907,8 +908,6 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
     # Add weight the bigger the snake is, currently + 15 for each growth
     curr_weight += curr_snake_size * snake_size_weight
 
-    # Add weight the more health the snake has
-    # curr_weight += curr_snake_health / snake_health_weight
 
     # # FloodFill determines available space for current snake to move, add space weight
     available_space = floodFill(game_state, curr_snake_head)
