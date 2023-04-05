@@ -536,11 +536,10 @@ def makeMove(game_state, curr_snake_id, move):
                 # Remove destination snake from game board and snake state
                 removeKilledSnake(new_board_state, new_head_state,
                                   new_snake_state, destination_snake_index)
-
+                
                 # Index might have changed when snake is removed
-                curr_snake_index, _, _, _, _ = findCurrentSnake(
-                    new_snake_state, curr_snake_id)
-
+                curr_snake_index, _, _, _, _ = findCurrentSnake(new_snake_state, curr_snake_id)
+                
                 # Snake moves forward and updates all coords in new game state
                 moveForward(new_board_state, new_head_state, new_snake_state,
                             curr_snake_id, curr_snake_index, curr_snake_body, head_x, head_y, False)
@@ -559,8 +558,7 @@ def makeMove(game_state, curr_snake_id, move):
                                   new_snake_state, curr_snake_index)
 
                 # Index might have changed when snake is removed
-                destination_snake_index, _, _, _, _ = findCurrentSnake(
-                    new_snake_state, destination_snake_index)
+                destination_snake_index, _, _, _, _ = findCurrentSnake(new_snake_state, destination_snake_index)
 
                 # Same size case
                 if (destination_snake_length == curr_snake_length):
@@ -575,10 +573,10 @@ def makeMove(game_state, curr_snake_id, move):
                 if (head_x == curr_snake_tail["x"] and head_y == curr_snake_tail["y"]):
                     # Snake moves forward and updates all coords in new game state
                     moveForward(new_board_state, new_head_state, new_snake_state,
-                                curr_snake_id, curr_snake_index, curr_snake_body, head_x, head_y, True)
-
+                            curr_snake_id, curr_snake_index, curr_snake_body, head_x, head_y, True)
+                    
                     curr_health = updateSnakeHealth(
-                        new_snake_state, curr_snake_index, True, False)
+                    new_snake_state, curr_snake_index, True, False)
 
                 # check if our snake ran out of health
                     if (curr_health <= 0):
@@ -586,16 +584,18 @@ def makeMove(game_state, curr_snake_id, move):
                             new_board_state, new_head_state, new_snake_state, curr_snake_index)
                 else:
                     removeKilledSnake(new_board_state, new_head_state,
-                                      new_snake_state, curr_snake_index)
-
+                              new_snake_state, curr_snake_index)
+                    
             else:
                 removeKilledSnake(new_board_state, new_head_state,
-                                  new_snake_state, curr_snake_index)
+                              new_snake_state, curr_snake_index)
 
         return new_game_state
 
     # Snake move to a cell with food
     elif (destination_cell == 1):
+
+        # Check if theres a competitor for the targeted food and if that comptetitor is bigger or equal size
         directions = [[0, 1], [0, -1], [1, 0], [-1, 0]]
         for dir in directions:
             curr_x = head_x + dir[0]
@@ -608,7 +608,7 @@ def makeMove(game_state, curr_snake_id, move):
                 if (other_snake_length >= curr_snake_length):
                     removeKilledSnake(new_board_state, new_head_state,
                                       new_snake_state, curr_snake_index)
-
+                    
                     return new_game_state
 
         # Snake moves forward and updates all coords in new game state
@@ -704,6 +704,7 @@ def snakeInfoLoop(game_state, curr_snake_id, board_width, board_height):
     curr_snake_head = None
     curr_snake_size = 0
     curr_snake_health = 0
+    curr_snake_tail = None
     average_snake_size = 0
     other_edge_snakes = []
 
@@ -718,6 +719,7 @@ def snakeInfoLoop(game_state, curr_snake_id, board_width, board_height):
             curr_snake_health = snake["health"]
             curr_snake_head = snake["head"]
             curr_snake_size = len(snake["body"])
+            curr_snake_tail = snake["body"][-1]
         else:
             total_snake_amount += 1
             curr_length_total += len(snake["body"])
@@ -726,9 +728,9 @@ def snakeInfoLoop(game_state, curr_snake_id, board_width, board_height):
                 other_edge_snakes.append(snake)
 
     if (total_snake_amount > 0):
-        average_snake_size = curr_length_total // total_snake_amount
+      average_snake_size = curr_length_total // total_snake_amount
 
-    return curr_snake_head, curr_snake_size, curr_snake_health, average_snake_size, other_edge_snakes
+    return curr_snake_head, curr_snake_tail, curr_snake_size, curr_snake_health, average_snake_size, other_edge_snakes
 
 
 # Return the Manhattan distance of the closest food
@@ -751,9 +753,10 @@ def isOnEdgeBorder(head_x, head_y, board_height, board_width):
 
 
 # Return edge kill value of current snake
-def edgeKillValue(board_width, board_height, head_x, head_y, other_edge_snakes, main_snake_id):
+def edgeKillValue(board_state, board_width, board_height, head_x, head_y, other_edge_snakes, main_snake_id):
     main_snake_edge_kill_weight = -2000
-    other_snake_edge_kill_weight = 25
+    other_snake_edge_kill_weight = 30
+
 
     if (isOnEdgeBorder(head_x, head_y, board_width, board_height)):
         for snake in other_edge_snakes:
@@ -766,22 +769,41 @@ def edgeKillValue(board_width, board_height, head_x, head_y, other_edge_snakes, 
                 curr_edge_kill_weight = main_snake_edge_kill_weight
 
             if ((head_x == 1 and edge_head_x == 0) or (head_x == board_width - 2 and edge_head_x == board_width - 1)):
-                if (snake["body"][1]["y"] < edge_head_y):
-                    if (head_y > edge_head_y):
-                        return curr_edge_kill_weight
+                if (head_x == 1 and edge_head_x == 0):
+                    if (snake["body"][1]["y"] < edge_head_y):
+                        if (head_y > edge_head_y and board_state[edge_head_y][edge_head_x + 1] == main_snake_id):
+                            return curr_edge_kill_weight
 
-                elif (snake["body"][1]["y"] > edge_head_y):
-                    if (head_y < edge_head_y):
-                        return curr_edge_kill_weight
+                    elif (snake["body"][1]["y"] > edge_head_y):
+                        if (head_y < edge_head_y and board_state[edge_head_y][edge_head_x + 1] == main_snake_id):
+                            return curr_edge_kill_weight
+                elif ((head_x == board_width - 2 and edge_head_x == board_width - 1)):
+                    if (snake["body"][1]["y"] < edge_head_y):
+                        if (head_y > edge_head_y and board_state[edge_head_y][edge_head_x - 1] == main_snake_id):
+                            return curr_edge_kill_weight
+
+                    elif (snake["body"][1]["y"] > edge_head_y):
+                        if (head_y < edge_head_y and board_state[edge_head_y][edge_head_x - 1] == main_snake_id):
+                            return curr_edge_kill_weight
 
             elif ((head_y == 1 and edge_head_y == 0) or (head_y == board_height - 2 and edge_head_y == board_height - 1)):
-                if (snake["body"][1]["x"] < edge_head_x):
-                    if (head_x > edge_head_x):
-                        return curr_edge_kill_weight
+                if ((head_y == 1 and edge_head_y == 0)):
+                    if (snake["body"][1]["x"] < edge_head_x):
+                        if (head_x > edge_head_x and board_state[edge_head_y + 1][edge_head_x] == main_snake_id):
+                            return curr_edge_kill_weight
 
-                elif (snake["body"][1]["x"] > edge_head_x):
-                    if (head_x < edge_head_x):
-                        return curr_edge_kill_weight
+                    elif (snake["body"][1]["x"] > edge_head_x):
+                        if (head_x < edge_head_x and board_state[edge_head_y + 1][edge_head_x] == main_snake_id):
+                            return curr_edge_kill_weight
+                elif (head_y == board_height - 2 and edge_head_y == board_height - 1):
+                    if (snake["body"][1]["x"] < edge_head_x):
+                        if (head_x > edge_head_x and board_state[edge_head_y - 1][edge_head_x] == main_snake_id):
+                            return curr_edge_kill_weight
+
+                    elif (snake["body"][1]["x"] > edge_head_x):
+                        if (head_x < edge_head_x and board_state[edge_head_y - 1][edge_head_x] == main_snake_id):
+                            return curr_edge_kill_weight
+                    
 
     return 0
 
@@ -790,19 +812,21 @@ def edgeKillValue(board_width, board_height, head_x, head_y, other_edge_snakes, 
 def headCollisionInfo(game_state, head_x, head_y, curr_snake_size, curr_snake_id, main_snake_id):
     smallest_snake_distance = float("inf")
     other_head_losing_weight = float("-inf")
-    main_head_losing_weight = 250
+    main_head_losing_weight = float("inf")
 
     other_head_equal_weight = float("-inf")
 
-    for snake in game_state["snakes"]:
-        curr_head_losing_weight = 0
+
+    curr_head_losing_weight = 0
+
+    for snake in game_state["snakes"]:    
         curr_head_x = snake["head"]["x"]
         curr_head_y = snake["head"]["y"]
 
         if (snake["id"] == curr_snake_id):
             continue
 
-        if (len(snake["body"]) < curr_snake_size):
+        if (len(snake["body"]) < curr_snake_size and (curr_snake_size - len(snake["body"])) > 1):
             curr_snake_distance = abs(
                 head_x - curr_head_x) + abs(head_y - curr_head_y)
             smallest_snake_distance = min(
@@ -810,6 +834,7 @@ def headCollisionInfo(game_state, head_x, head_y, curr_snake_size, curr_snake_id
 
         # If current snake size is smaller or equal
         if ((abs(head_x - curr_head_x) + abs(head_y - curr_head_y) < 2)):
+            
             # If current snake size is smaller
             if (len(snake["body"]) > curr_snake_size):
                 curr_head_losing_weight = other_head_losing_weight
@@ -821,6 +846,9 @@ def headCollisionInfo(game_state, head_x, head_y, curr_snake_size, curr_snake_id
             # If current snake size is equal
             elif (len(snake["body"]) == curr_snake_size):
                 curr_head_losing_weight = other_head_equal_weight
+            
+            # elif (curr_snake_size - len(snake["body"]) < 2):
+            #     curr_head_losing_weight = other_head_equal_weight
 
     return smallest_snake_distance, curr_head_losing_weight
 
@@ -832,8 +860,8 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
     snake_health_weight = 2
     opponent_death_weight = float("inf")
     small_size_penalty_weight = -400
-    available_space_weight = 0.3
-    outer_bound_weight = -10
+    available_space_weight = 0.5
+    outer_bound_weight = -13
     center_control_weight = 10
     head_kill_weight = 50
     turn_weight = 100
@@ -861,7 +889,7 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
     turns = game_state["turn"]
 
     # Find current snake as well as average snake size and snakes that are on the edge
-    curr_snake_head, curr_snake_size, curr_snake_health, average_snake_size, other_edge_snakes = snakeInfoLoop(
+    curr_snake_head, curr_snake_tail, curr_snake_size, curr_snake_health, average_snake_size, other_edge_snakes = snakeInfoLoop(
         game_state, curr_snake_id, board_width, board_height)
       
     # # Add weight if current snake is smaller than average size of snakes
@@ -891,6 +919,12 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
         board_state, board_width, board_height, head_x, head_y)
     curr_weight += food_weight/(closest_food_distance + 1)
 
+     # # Add the edge kill weight
+    edge_kill_weight = edgeKillValue(board_state, board_width, board_height,
+                                 head_x, head_y, other_edge_snakes, main_snake_id)
+    outer_bound_weight = 0
+    curr_weight += edge_kill_weight
+
     # # # Add weight if snake is on edge of board
     if (isOnEdge(head_x, head_y, board_width, board_height)):
         curr_weight += outer_bound_weight
@@ -898,10 +932,6 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
     # Add weight if snake is in center of board
     if (head_x in [4, 5, 6]):
         curr_weight += center_control_weight
-
-    # # Add the edge kill weight
-    curr_weight += edgeKillValue(board_width, board_height,
-                                 head_x, head_y, other_edge_snakes, main_snake_id)
 
     smallest_snake_distance, head_collision_value = headCollisionInfo(
         game_state, head_x, head_y, curr_snake_size, curr_snake_id, main_snake_id)
@@ -914,7 +944,6 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
         return curr_weight
     else:
         return curr_weight * -1
-
 
 
 # The snake MiniMax algorithm
@@ -1017,18 +1046,4 @@ if __name__ == "__main__":
 
 
 # TODO:
-# In tight situation follow snake's own tail
-# Reward snake for lasting longer turns
-# Reward snake for getting to cells closer to food
-
-# Current TODO
-# Minimax to use pointers
-# Decision tree
-# Balance evaluation score
-# Put up a server
-
-
-# Notes: Higher health score, snake tries to eath more
-#       Higher space score, snake tries to grow less hence increasing space
-#       Current snake is always trying to healkill and ends up dying
-#       Current snake cannot tell tail is free on movement
+# Prevent the snake going in between snakes
