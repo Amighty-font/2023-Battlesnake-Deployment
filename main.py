@@ -895,7 +895,7 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
         food_weight = 25
 
     if (curr_snake_size >= 25):
-        food_weight = 15
+        size_weight = 15
 
     if (len(game_state["snakes"]) == 2):
         head_kill_weight += 25
