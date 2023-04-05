@@ -1023,7 +1023,7 @@ def miniMax_value(game_state, safe_moves):
     elif (snakes_num == 2):
         depth = 5
     else:
-        depth = 7
+        depth = 5
 
     result_value, best_move = miniMax(
         current_game_state, depth, game_state["you"]["id"], game_state["you"]["id"], None, True, float("-inf"), float("inf"))
@@ -1049,6 +1049,13 @@ if __name__ == "__main__":
 
 
 # TODO:
+# Runs out of health
+# Not aggressive when it is bigger
+# does not try to edge kill
+# does not create loops when in danger
+
+
+# TODO multi snake:
 # Prevent the snake going in between snakes
 # Snake go into circle if surrounded by bigger snakes
 # snake does not go to spaces that it cannot come out of
