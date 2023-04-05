@@ -754,7 +754,7 @@ def isOnEdgeBorder(head_x, head_y, board_height, board_width):
 
 # Return edge kill value of current snake
 def edgeKillValue(board_state, board_width, board_height, head_x, head_y, other_edge_snakes, main_snake_id):
-    main_snake_edge_kill_weight = -2000
+    main_snake_edge_kill_weight = -5000
     other_snake_edge_kill_weight = 30
 
 
@@ -1053,3 +1053,4 @@ if __name__ == "__main__":
 # Prevent the snake going in between snakes
 # Snake go into circle if surrounded by bigger snakes
 # snake does not go to spaces that it cannot come out of
+# Weak against snakes that come down from center and edge choke our snake
