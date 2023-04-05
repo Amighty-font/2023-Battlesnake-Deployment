@@ -930,7 +930,7 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id):
         curr_weight += outer_bound_weight
 
     # Add weight if snake is in center of board
-    if (head_x in [4, 5, 6]):
+    if (head_x in [4, 5, 6] and len(game_state["snakes"]) < 3):
         curr_weight += center_control_weight
 
     smallest_snake_distance, head_collision_value = headCollisionInfo(
