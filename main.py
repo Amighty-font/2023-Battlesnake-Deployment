@@ -962,8 +962,12 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id, current_turn)
     available_space, is_tail_reachable = floodFill(game_state, curr_snake_head, curr_snake_body, curr_snake_tail)
     curr_weight += available_space * available_space_weight
 
-    if (available_space < curr_snake_size // 1.5 and not is_tail_reachable):
-      return float("-inf")
+    if (available_space < 2 and not is_tail_reachable):
+      return -10000
+    elif (available_space < curr_snake_size // 4 and not is_tail_reachable):
+      return -800
+    elif (available_space < curr_snake_size // 1.5 and not is_tail_reachable):
+      return -1000
 
     # Current snake head coordinates
     head_x = curr_snake_head["x"]
