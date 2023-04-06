@@ -1061,7 +1061,7 @@ def miniMax(game_state, depth, curr_snake_id, main_snake_id, previous_snake_id, 
         for move in moves:
             new_game_state = makeMove(game_state, curr_snake_id, move)
             curr_val = miniMax(new_game_state, depth - 1, next_snake_id,
-                               main_snake_id, curr_snake_id, False, alpha, beta)
+                               main_snake_id, curr_snake_id, False, alpha, beta, current_turn)
             # print(f"{curr_snake_id} {move}: {curr_val}")
             if (min_value > curr_val):
                 best_move = move
