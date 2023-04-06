@@ -967,7 +967,7 @@ def evaluatePoint(game_state, depth, main_snake_id, curr_snake_id, current_turn)
     elif (available_space < curr_snake_size // 4 and not is_tail_reachable):
       return -800
     elif (available_space < curr_snake_size // 1.5 and not is_tail_reachable):
-      return -1000
+      return -400
 
     # Current snake head coordinates
     head_x = curr_snake_head["x"]
